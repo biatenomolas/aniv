@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joyeux Anniversaire, Irène !</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f3e5f5, #e1f5fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            animation: fadeIn 1s ease-in;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #d4a017;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #444;
+        }
+        .countdown {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #0288d1;
+            margin: 20px 0;
+        }
+        .birthday-message {
+            display: none;
+            animation: slideIn 1s ease-out;
+        }
+        .show {
+            display: block;
+        }
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #d4a017;
+            margin-bottom: 20px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @media (max-width: 480px) {
+            .container { padding: 20px; }
+            h1 { font-size: 2em; }
+            p { font-size: 1em; }
+            .profile-pic { width: 120px; height: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="countdown-section">
+            <h1>Chère Irène, ton anniversaire approche !</h1>
+            <p>Dans quelques jours, nous célébrerons une personne exceptionnelle : toi !</p>
+            <div class="countdown" id="countdown"></div>
+        </div>
+        <div id="birthday-message" class="birthday-message">
+            <img src="https://i.imgur.com/UFlBcVC.jpg" alt="Photo d'Irène" class="profile-pic">
+            <h1>Joyeux Anniversaire, Irène ! 🎉</h1>
+            <p>En ce jour spécial, je tiens à te souhaiter une année remplie de succès, de bonheur et d'inspiration. Tu es une mentore incroyable, et ta guidance fait une différence chaque jour. Que cette nouvelle année t'apporte tout ce que tu désires et bien plus encore !</p>
+            <p>Avec toute mon admiration et mes meilleurs vœux,</p>
+            <p>BIATE Salomon</p>
+            <button class="play-music-btn" id="play-music-btn">Jouer la musique d'anniversaire</button>
+            <audio id="birthday-song">
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-HappyBirthday.mp3" type="audio/mpeg">
+                Votre navigateur ne supporte pas l'élément audio.
+            </audio>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/confetti.min.js"></script>
+    <script>
+        const birthdayDate = new Date('2025-06-28T00:00:00');
+        const countdownElement = document.getElementById('countdown');
+        const countdownSection = document.getElementById('countdown-section');
+        const birthdayMessage = document.getElementById('birthday-message');
+        const birthdaySong = document.getElementById('birthday-song');
+        const playMusicBtn = document.getElementById('play-music-btn');
+
+        function updateCountdown() {
+            const now = new Date();
+            const timeDiff = birthdayDate - now;
+
+            if (timeDiff <= 0) {
+                countdownSection.style.display = 'none';
+                birthdayMessage.classList.add('show');
+                startConfetti();
+                playMusic();
+            } else {
+                const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                countdownElement.textContent = `${days} jours, ${hours} heures, ${minutes} minutes, ${seconds} secondes`;
+            }
+        }
+
+        function startConfetti() {
+            try {
+                if (typeof ConfettiGenerator !== 'undefined') {
+                    const confettiSettings = {
+                        target: document.body,
+                        max: 150,
+                        size: 1,
+                        animate: true,
+                        props: ['circle', 'square', 'triangle'],
+                        colors: [[212, 160, 23], [2, 136, 209], [255, 255, 255]],
+                        clock: 25
+                    };
+                    const confetti = new ConfettiGenerator(confettiSettings);
+                    confetti.render();
+                } else {
+                    console.log("ConfettiGenerator n'est pas chargé. Vérifiez la connexion ou la source du script.");
+                }
+            } catch (error) {
+                console.error("Erreur lors du chargement des confettis:", error);
+            }
+        }
+
+        function playMusic() {
+            birthdaySong.play().catch(error => {
+                console.log("Erreur de lecture audio:", error);
+                playMusicBtn.style.display = 'block';
+            });
+        }
+
+        playMusicBtn.addEventListener('click', () => {
+            birthdaySong.play();
+            playMusicBtn.style.display = 'none';
+        });
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
